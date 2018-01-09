@@ -5,7 +5,7 @@ ENV RESTIC_VERSION=0.8.1
 ADD restic-pub.pem /tmp/restic/restic-pub.pem
 
 RUN cd /tmp/restic && \
-    apk add --no-cache ca-certificates && \
+    apk add --no-cache ca-certificates openssh-client && \
     apk add --no-cache --virtual .build curl gnupg && \
     curl -LO https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/SHA256SUMS && \
     curl -LO https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/SHA256SUMS.asc && \
@@ -15,9 +15,12 @@ RUN cd /tmp/restic && \
     cat SHA256SUMS | grep restic_0.8.1_linux_amd64.bz2 | sha256sum -c && \
     bunzip2 restic_${RESTIC_VERSION}_linux_amd64.bz2 && \
     mv restic_${RESTIC_VERSION}_linux_amd64 /bin/restic && \
+    chmod +x /bin/restic && \
     cd / && \
     rm -rf /tmp/restic && \
     apk del .build && \
     rm -rf /var/cache/apk/*
 
-ENTRYPOINT /bin/restic
+ADD run.sh /run.sh
+
+ENTRYPOINT ["/bin/sh", "/run.sh"]
