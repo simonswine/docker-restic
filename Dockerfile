@@ -1,6 +1,6 @@
-FROM alpine:3.7
+FROM alpine:3.10
 
-ENV RESTIC_VERSION=0.8.1
+ENV RESTIC_VERSION=0.9.5
 
 ADD restic-pub.pem /tmp/restic/restic-pub.pem
 
@@ -12,7 +12,7 @@ RUN cd /tmp/restic && \
     gpg --import restic-pub.pem && \
     gpg --verify SHA256SUMS.asc && \
     curl -LO https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/restic_${RESTIC_VERSION}_linux_amd64.bz2 && \
-    cat SHA256SUMS | grep restic_0.8.1_linux_amd64.bz2 | sha256sum -c && \
+    cat SHA256SUMS | grep restic_${RESTIC_VERSION}_linux_amd64.bz2 | sha256sum -c && \
     bunzip2 restic_${RESTIC_VERSION}_linux_amd64.bz2 && \
     mv restic_${RESTIC_VERSION}_linux_amd64 /bin/restic && \
     chmod +x /bin/restic && \
