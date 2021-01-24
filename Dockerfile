@@ -1,6 +1,6 @@
-FROM alpine:3.10
+FROM alpine:3.13
 
-ENV RESTIC_VERSION=0.9.5
+ENV RESTIC_VERSION=0.11.0
 
 ADD restic-pub.pem /tmp/restic/restic-pub.pem
 
